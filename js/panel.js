@@ -1,7 +1,14 @@
 // Canal de comunicación entre panel y escenario
 const canal = new BroadcastChannel('control_escenario');
 let tiempoActual = 0;
+const iframe = document.createElement('iframe');
+iframe.src = url || URL_POR_DEFECTO;
 
+// Forzar tamaño fullscreen por estilo en línea
+iframe.style.width = "100vw";
+iframe.style.height = "100vh";
+iframe.style.border = "none";
+iframe.style.display = "block";
 // Enviar comandos al escenario
 function enviarComando(comando) {
   const data = {
