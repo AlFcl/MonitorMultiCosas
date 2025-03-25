@@ -1,0 +1,48 @@
+/* ======== ESTILOS GENERALES ======== */
+body {
+    margin: 0;
+    background-color: black;
+    color: #fefae0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  /* ======== CONTENIDO (IFRAME) ======== */
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  
+  /* ======== TEMPORIZADOR ======== */
+  #timer {
+    font-size: 12vw;
+    letter-spacing: 0.1em;
+    transition: color 0.3s ease;
+  }
+  
+  /* Cambios visuales por tiempo restante */
+  .timer-warning {
+    color: orange !important;
+  }
+  
+  .timer-danger {
+    color: red !important;
+    animation: blink 1s step-start infinite;
+  }
+  
+  /* Efecto parpadeo */
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  
+  /* ======== MENSAJE AL ESCENARIO ======== */
+  #mensaje {
+    font-size: 8vw;
+    color: #ffdd57;
+  }

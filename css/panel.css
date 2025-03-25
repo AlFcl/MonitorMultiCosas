@@ -1,0 +1,13 @@
+/* Estilos generales del panel */
+body {
+    background-color: #111;
+    color: white;
+  }
+  
+  label {
+    color: #ccc;
+  }
+  
+  .btn {
+    min-width: 180px;
+  }
