@@ -1,4 +1,4 @@
-# 🖥️ Monitor de Escenario — [alf.cl/monitor](https://alf.cl/monitor)
+# 🖥️ Monitor de Escenario — [tools.alf.cl/monitor](https://tools.alf.cl/monitor)
 
 Herramienta web creada para controlar contenido proyectado en tiempo real, ideal para iglesias, eventos, y presentaciones. Se compone de dos interfaces: un **panel de control** y una **pantalla de visualización**, comunicadas de forma local mediante `BroadcastChannel`.
 
@@ -64,4 +64,4 @@ monitor/
 ## ✨ Autor
 
 Creado por [alf.cl](https://alf.cl) — © 2025  
-Ubicación del proyecto: [`https://alf.cl/monitor`](https://alf.cl/monitor)
+Ubicación del proyecto: [`https://alf.cl/monitor`](https://tools.alf.cl/monitor)
