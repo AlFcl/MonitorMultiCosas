@@ -1,57 +1,442 @@
 /* ========================
-   css/index.css (Estilos de Escenario)
+   css/index.css (Estilos del Escenario - Versión Mejorada)
    ======================== */
-   html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    color: #fefae0;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
+
+:root {
+  --primary-bg: #000000;
+  --primary-text: #fefae0;
+  --warning-color: #ff8c00;
+  --danger-color: #ff4444;
+  --success-color: #00ff88;
+  --message-color: #ffdd57;
+  --error-color: #ff6b6b;
+  --progress-bg: rgba(255, 255, 255, 0.1);
+  --font-main: 'Segoe UI', 'Arial', sans-serif;
+  --font-mono: 'Courier New', monospace;
+}
+
+/* Reset y base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  font-family: var(--font-main);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Cursor personalizado en pantalla completa */
+.fullscreen-mode {
+  cursor: none;
+}
+
+.fullscreen-mode:hover {
+  cursor: none;
+}
+
+/* Contenedor principal */
+#contenedor {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
+}
+
+/* Estilos para iframe */
+#contenedor iframe {
+  width: 100vw !important;
+  height: 100vh !important;
+  border: none;
+  display: block;
+  background: var(--primary-bg);
+}
+
+/* ========================
+   TEMPORIZADOR
+   ======================== */
+
+.timer-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.timer-display {
+  font-size: clamp(8rem, 15vw, 20rem);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 30px rgba(254, 250, 224, 0.5);
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  line-height: 1;
+}
+
+/* Estados del temporizador */
+.timer-display.timer-warning {
+  color: var(--warning-color);
+  text-shadow: 0 0 40px rgba(255, 140, 0, 0.6);
+  animation: pulse-warning 2s infinite;
+}
+
+.timer-display.timer-danger {
+  color: var(--danger-color);
+  text-shadow: 0 0 50px rgba(255, 68, 68, 0.8);
+  animation: blink-danger 0.8s infinite;
+}
+
+.timer-display.timer-finished {
+  color: var(--success-color);
+  text-shadow: 0 0 60px rgba(0, 255, 136, 0.8);
+  animation: celebration 1s ease-in-out;
+  font-size: clamp(6rem, 12vw, 16rem);
+}
+
+/* Barra de progreso del temporizador */
+.timer-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: var(--progress-bg);
+  overflow: hidden;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  background: var(--success-color);
+  transition: width 1s ease, background-color 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+/* ========================
+   MENSAJES
+   ======================== */
+
+.mensaje-escenario {
+  font-size: clamp(4rem, 8vw, 12rem);
+  color: var(--message-color);
+  text-align: center;
+  width: 100%;
+  padding: 2rem;
+  font-weight: 600;
+  text-shadow: 0 0 30px rgba(255, 221, 87, 0.6);
+  line-height: 1.2;
+  word-wrap: break-word;
+  hyphens: auto;
+  animation: messageEntry 0.8s ease-out;
+}
+
+/* ========================
+   MENSAJES DE ERROR
+   ======================== */
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--error-color);
+  text-align: center;
+  padding: 2rem;
+  animation: errorShake 0.6s ease-in-out;
+}
+
+.error-message i {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+.error-message h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.error-message p {
+  font-size: 1.5rem;
+  opacity: 0.8;
+  max-width: 80%;
+}
+
+/* ========================
+   ALERTAS TEMPORALES
+   ======================== */
+
+.alerta-temporal {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 193, 7, 0.95);
+  color: #000;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 193, 7, 0.8);
+  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+  animation: alertSlideIn 0.5s ease-out;
+}
+
+/* ========================
+   ANIMACIONES
+   ======================== */
+
+@keyframes blink-danger {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+@keyframes pulse-warning {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes celebration {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  50% { transform: scale(1.2) rotate(5deg); }
+  75% { transform: scale(1.1) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes messageEntry {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes alertSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* ========================
+   EFECTOS ESPECIALES
+   ======================== */
+
+/* Efecto de partículas para celebración */
+.timer-display.timer-finished::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, transparent 20%, rgba(0, 255, 136, 0.1) 21%, rgba(0, 255, 136, 0.1) 40%, transparent 41%);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: rotate 4s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Efecto de glow para elementos importantes */
+.glow-effect {
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+/* ========================
+   RESPONSIVE DESIGN
+   ======================== */
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .timer-display {
+    font-size: clamp(4rem, 12vw, 8rem);
+  }
+  
+  .mensaje-escenario {
+    font-size: clamp(2rem, 6vw, 6rem);
+    padding: 1rem;
+  }
+  
+  .error-message i {
+    font-size: 3rem;
+  }
+  
+  .error-message h2 {
+    font-size: 2rem;
+  }
+  
+  .error-message p {
+    font-size: 1.2rem;
+  }
+  
+  .alerta-temporal {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    top: 10px;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .timer-display {
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin-bottom: 1rem;
+  }
+  
+  .mensaje-escenario {
+    font-size: clamp(1.5rem, 5vw, 4rem);
+    padding: 0.5rem;
+  }
+  
+  .timer-progress {
+    height: 6px;
+  }
+}
+
+/* Para pantallas ultra anchas */
+@media (min-width: 1920px) {
+  .timer-display {
+    font-size: clamp(12rem, 18vw, 24rem);
+  }
+  
+  .mensaje-escenario {
+    font-size: clamp(6rem, 10vw, 16rem);
+  }
+  
+  .timer-progress {
+    height: 12px;
+  }
+}
+
+/* ========================
+   PREFERENCIAS DE ACCESIBILIDAD
+   ======================== */
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .timer-display.timer-warning {
+    animation: none;
+  }
+  
+  .timer-display.timer-danger {
+    animation: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-text: #ffffff;
+    --warning-color: #ffaa00;
+    --danger-color: #ff0000;
+    --success-color: #00ff00;
+    --message-color: #ffff00;
+  }
+  
+  .timer-display,
+  .mensaje-escenario {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Modo oscuro/claro automático */
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary-bg: #ffffff;
+    --primary-text: #2c2c2c;
   }
   
   #contenedor {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: radial-gradient(circle at center, #f0f0f0 0%, #ffffff 100%);
   }
   
-  #contenedor iframe {
-    width: 100vw !important;
-    height: 100vh !important;
-    border: none;
-    display: block;
+  .timer-display,
+  .mensaje-escenario {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ========================
+   ESTADOS DE IMPRESIÓN
+   ======================== */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
   }
   
-  #timer {
-    font-size: 12vw;
-    letter-spacing: 0.1em;
-    transition: color 0.3s ease;
-    text-align: center;
-    width: 100%;
+  .timer-display,
+  .mensaje-escenario {
+    color: black !important;
+    text-shadow: none !important;
+    animation: none !important;
   }
   
-  .timer-warning {
-    color: orange !important;
+  .timer-progress {
+    display: none;
   }
   
-  .timer-danger {
-    color: red !important;
-    animation: blink 1s step-start infinite;
+  .alerta-temporal {
+    display: none;
   }
-  
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-  
-  #mensaje {
-    font-size: 8vw;
-    color: #ffdd57;
-    text-align: center;
-    width: 100%;
-    padding: 2rem;
-  }
+}

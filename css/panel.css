@@ -1,13 +1,601 @@
-/* Estilos generales del panel */
+/* ========================
+   css/panel.css (Estilos del Panel - Versión Mejorada)
+   ======================== */
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos base */
 body {
-    background-color: #111;
-    color: white;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+/* Mejoras del contenedor principal */
+.container {
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Título principal */
+h1 {
+  background: linear-gradient(45deg, #0d6efd, #6610f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Mejoras de botones */
+.btn {
+  min-width: 140px;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  box-shadow: var(--shadow);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Efectos específicos por tipo de botón */
+.btn-primary {
+  background: linear-gradient(45deg, #0d6efd, #0056b3);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #198754, #146c43);
+}
+
+.btn-warning {
+  background: linear-gradient(45deg, #ffc107, #e0a800);
+  color: #000;
+}
+
+.btn-danger {
+  background: linear-gradient(45deg, #dc3545, #c82333);
+}
+
+.btn-info {
+  background: linear-gradient(45deg, #0dcaf0, #087990);
+}
+
+.btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: #ffffff;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+/* Grupo de botones principales */
+.btn-group-main {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-group-main .btn {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* Mejoras de formularios */
+.form-label {
+  color: #e9ecef;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
+  color: #ffffff;
+  transition: var(--transition);
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  color: #ffffff;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Estado del sistema mejorado */
+.content-section {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--primary-color);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Cards de estado mejoradas */
+.status-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease;
+  height: 100%;
+  backdrop-filter: blur(10px);
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.status-card .card-body {
+  padding: 1.5rem;
+}
+
+.status-card h6 {
+  color: #e9ecef;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.status-card i {
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+/* Badges de estado mejorados */
+.status-badge {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+/* Estados específicos del badge de vista */
+.badge-vista-contenido {
+  background: linear-gradient(45deg, #0d6efd, #6610f2);
+  color: white;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.badge-vista-temporizador {
+  background: linear-gradient(45deg, #198754, #20c997);
+  color: white;
+  box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+}
+
+.badge-vista-mensaje {
+  background: linear-gradient(45deg, #ffc107, #fd7e14);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+/* Estados específicos del badge de timer */
+.badge-timer-activo {
+  background: linear-gradient(45deg, #198754, #20c997);
+  color: white;
+  box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+  animation: pulse-success 2s infinite;
+}
+
+.badge-timer-pausado {
+  background: linear-gradient(45deg, #ffc107, #fd7e14);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.badge-timer-finalizado {
+  background: linear-gradient(45deg, #dc3545, #e63946);
+  color: white;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  animation: blink-danger 1s infinite;
+}
+
+.badge-timer-configurado {
+  background: linear-gradient(45deg, #0dcaf0, #6f42c1);
+  color: white;
+  box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
+}
+
+.badge-timer-inactivo {
+  background: rgba(108, 117, 125, 0.8);
+  color: white;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+/* Contenido actual mejorado */
+.contenido-info {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contenido-info strong {
+  color: #fff;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.contenido-info small {
+  color: #adb5bd;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.url-display {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mensaje-display {
+  font-style: italic;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+.tiempo-display {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #20c997;
+}
+
+/* Indicador de conexión mejorado */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.status-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.status-indicator.online {
+  background: var(--success-color);
+  box-shadow: 0 0 15px rgba(25, 135, 84, 0.6);
+}
+
+.status-indicator.online::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 2px solid rgba(25, 135, 84, 0.3);
+  animation: ping 2s infinite;
+}
+
+/* Animaciones mejoradas */
+@keyframes pulse-success {
+  0% { box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3); }
+  50% { box-shadow: 0 4px 25px rgba(25, 135, 84, 0.6); }
+  100% { box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3); }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  75%, 100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes blink-danger {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+/* Transiciones suaves para cambios de estado */
+.fade-transition {
+  transition: all 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Controles del temporizador */
+.timer-controls {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--success-color);
+}
+
+.timer-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.timer-input-group {
+  text-align: center;
+}
+
+.timer-input-group label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  color: #adb5bd;
+}
+
+.timer-input-group input {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.timer-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Sección de mensajes */
+.message-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--warning-color);
+}
+
+/* Footer mejorado */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer img {
+  filter: brightness(0.9);
+  transition: var(--transition);
+}
+
+footer img:hover {
+  filter: brightness(1.1);
+  transform: scale(1.05);
+}
+
+/* Sistema de notificaciones */
+#notifications {
+  z-index: 9999;
+}
+
+.toast {
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Ayuda de atajos */
+.alert-dark {
+  background: rgba(52, 58, 64, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(5px);
+}
+
+/* Indicadores de estado */
+.status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-indicator.online {
+  background: var(--success-color);
+  box-shadow: 0 0 10px rgba(25, 135, 84, 0.5);
+}
+
+.status-indicator.offline {
+  background: var(--danger-color);
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btn-pulse:hover {
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 1.5rem;
   }
   
-  label {
-    color: #ccc;
+  .btn-group-main {
+    flex-direction: column;
+  }
+  
+  .timer-inputs {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .timer-buttons {
+    flex-direction: column;
   }
   
   .btn {
-    min-width: 180px;
+    min-width: 100%;
+    margin-bottom: 0.5rem;
   }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  .container {
+    padding: 1rem;
+  }
+}
+
+/* Estados de loading */
+.btn.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-control:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Modo alto contraste */
+@media (prefers-contrast: high) {
+  :root {
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+  
+  .form-control {
+    border-width: 2px;
+  }
+}
+
+/* Modo sin animaciones */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
