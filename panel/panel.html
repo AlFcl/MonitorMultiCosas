@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Escenario - Panel de Control</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2c3d66e2b.js" crossorigin="anonymous"></script>
+  
+  <!-- TinyMCE con API Key personal -->
+  <script src="https://cdn.tiny.cloud/1/qs5t5kxqvtwxee2h98pnbqrfss7dsrlzpate1o5l1jbsaquk/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+  
+  <link rel="stylesheet" href="../css/panel.css">
+</head>
+<body>
+  <!-- Contenedor de notificaciones -->
+  <div id="notifications" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+  <div class="container slide-in">
+    <!-- Header -->
+    <header class="text-center mb-4">
+      <h1>
+            <img src="../assets/logo.svg" alt="Logo" width="120" class="mb-3">
+
+      </h1>
+      <p class="text-muted mb-0">Panel de Control Avanzado</p>
+      <div class="mt-2">
+        <span class="status-indicator online"></span>
+        <small>Sistema Conectado</small>
+      </div>
+    </header>
+
+    <!-- Botones principales -->
+    <section class="content-section">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-tv me-2 text-primary"></i>
+        <h5 class="mb-0">Control de Visualización</h5>
+      </div>
+      
+      <div class="btn-group-main">
+        <button class="btn btn-primary btn-pulse" onclick="mostrar('iframe')">
+          <i class="fas fa-globe me-2"></i>
+          Contenido
+        </button>
+        <button class="btn btn-success btn-pulse" onclick="mostrar('timer')">
+          <i class="fas fa-hourglass-half me-2"></i>
+          Temporizador
+        </button>
+        <button class="btn btn-warning btn-pulse" onclick="mostrar('mensaje')">
+          <i class="fas fa-bullhorn me-2"></i>
+          Mensaje
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-outline-light" onclick="abrirPantalla()">
+          <i class="fas fa-external-link-alt me-2"></i>
+          Abrir Pantalla de Escenario
+        </button>
+      </div>
+    </section>
+
+    <!-- Configuración de contenido -->
+    <section class="content-section">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-link me-2 text-primary"></i>
+        <h5 class="mb-0">Configuración de Contenido</h5>
+      </div>
+      
+      <div class="mb-3">
+        <label for="url" class="form-label">
+          <i class="fas fa-globe me-2"></i>
+          URL del contenido web
+        </label>
+        <input type="url" id="url" class="form-control" 
+               value="https://ictuesantacruz.cl" 
+               placeholder="https://ejemplo.com"
+               aria-describedby="urlHelp">
+        <div id="urlHelp" class="form-text text-muted">
+          Introduce la URL que se mostrará en el escenario
+        </div>
+      </div>
+    </section>
+
+    <!-- Control del temporizador -->
+    <section class="timer-controls">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-clock me-2 text-success"></i>
+        <h5 class="mb-0">Control del Temporizador</h5>
+      </div>
+
+      <div class="timer-inputs">
+        <div class="timer-input-group">
+          <label for="horas">Horas</label>
+          <input type="number" id="horas" class="form-control" 
+                 min="0" max="23" value="0" 
+                 aria-label="Horas">
+        </div>
+        <div class="timer-input-group">
+          <label for="minutos">Minutos</label>
+          <input type="number" id="minutos" class="form-control" 
+                 min="0" max="59" value="5" 
+                 aria-label="Minutos">
+        </div>
+        <div class="timer-input-group">
+          <label for="segundos">Segundos</label>
+          <input type="number" id="segundos" class="form-control" 
+                 min="0" max="59" value="0" 
+                 aria-label="Segundos">
+        </div>
+      </div>
+
+      <div class="timer-buttons">
+        <button class="btn btn-info" onclick="actualizarTiempo()" title="Actualizar tiempo (U)">
+          <i class="fas fa-sync-alt me-2"></i>
+          Actualizar Tiempo
+        </button>
+        <button class="btn btn-success" onclick="enviarComando('start')" title="Iniciar temporizador (Espacio)">
+          <i class="fas fa-play me-2"></i>
+          Iniciar
+        </button>
+        <button class="btn btn-warning" onclick="enviarComando('pause')" title="Pausar temporizador">
+          <i class="fas fa-pause me-2"></i>
+          Pausar
+        </button>
+        <button class="btn btn-danger" onclick="enviarComando('reset')" title="Reiniciar temporizador (Shift+R)">
+          <i class="fas fa-undo me-2"></i>
+          Reiniciar
+        </button>
+      </div>
+
+      <!-- Presets de tiempo rápidos -->
+      <div class="mt-3">
+        <h6 class="text-muted mb-2">
+          <i class="fas fa-magic me-2"></i>
+          Tiempos Rápidos
+        </h6>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 1, 0)">
+            1 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 5, 0)">
+            5 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 10, 0)">
+            10 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 15, 0)">
+            15 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 30, 0)">
+            30 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(0, 40, 0)">
+            40 min
+          </button>
+          <button class="btn btn-sm btn-outline-light" onclick="setTiempoRapido(1, 0, 0)">
+            1 hora
+          </button>
+        </div>
+      </div>
+
+      <!-- Información del temporizador en tiempo real -->
+      <div class="mt-4" id="timer-info-panel" style="display: none;">
+        <div class="alert alert-info">
+          <h6 class="alert-heading">
+            <i class="fas fa-info-circle me-2"></i>
+            Información del Temporizador
+          </h6>
+          <div class="row">
+            <div class="col-md-6">
+              <small class="text-muted">Tiempo estimado de finalización:</small>
+              <div id="tiempo-finalizacion" class="fw-bold">--:--:--</div>
+            </div>
+            <div class="col-md-6">
+              <small class="text-muted">Estado actual:</small>
+              <div id="estado-detallado" class="fw-bold">Inactivo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configuración de mensajes con TinyMCE -->
+    <section class="message-section">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-comment-alt me-2 text-warning"></i>
+        <h5 class="mb-0">Editor de Mensajes al Escenario</h5>
+      </div>
+      
+      <div class="mb-3">
+        <label for="mensaje" class="form-label">
+          <i class="fas fa-edit me-2"></i>
+          Mensaje personalizado con formato
+        </label>
+        
+        <!-- Editor TinyMCE -->
+        <textarea id="mensaje" class="form-control">
+          ¡Bienvenidos al evento!
+        </textarea>
+        
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <div id="mensajeHelp" class="form-text text-muted">
+            Máximo 800 caracteres
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-warning" onclick="limpiarMensaje()">
+              <i class="fas fa-eraser me-1"></i>
+              Limpiar
+            </button>
+            <button class="btn btn-warning" onclick="mostrar('mensaje')">
+              <i class="fas fa-paper-plane me-1"></i>
+              Enviar Mensaje
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensajes predefinidos simplificados -->
+      <div class="mt-3">
+        <h6 class="text-muted mb-2">
+          <i class="fas fa-list me-2"></i>
+          Mensajes Rápidos
+        </h6>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-outline-warning" onclick="insertarMensajeRapido('bienvenida')">
+            Bienvenida
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="insertarMensajeRapido('pausa')">
+            Pausa
+          </button>
+          <button class="btn btn-sm btn-outline-success" onclick="insertarMensajeRapido('despedida')">
+            Despedida
+          </button>
+        </div>
+        
+        <!-- Botones destacados para mensajes importantes -->
+        <div class="mt-3">
+          <h6 class="text-muted mb-2">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Mensajes Importantes
+          </h6>
+          <div class="d-flex gap-3 justify-content-center">
+            <button class="btn btn-lg btn-danger btn-urgent-destacado" onclick="insertarMensajeRapido('urgente')">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <strong>URGENTE</strong>
+            </button>
+            <button class="btn btn-lg btn-warning btn-anuncio-destacado" onclick="insertarMensajeRapido('anuncio')">
+              <i class="fas fa-bullhorn me-2"></i>
+              <strong>ANUNCIO</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plantillas de diseño - ELIMINADAS -->
+    </section>
+
+    <!-- Panel de estado mejorado -->
+    <section class="content-section">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-info-circle me-2 text-info"></i>
+        <h5 class="mb-0">Estado del Sistema</h5>
+      </div>
+      
+      <div class="connection-status">
+        <span class="status-indicator online"></span>
+        <small class="text-success">Sistema Conectado y Funcionando</small>
+      </div>
+      
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card status-card">
+            <div class="card-body text-center">
+              <i class="fas fa-eye fa-2x text-primary"></i>
+              <h6>Vista Actual</h6>
+              <span id="estado-vista" class="status-badge badge-vista-contenido">CONTENIDO WEB</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card status-card">
+            <div class="card-body text-center">
+              <i class="fas fa-stopwatch fa-2x text-success"></i>
+              <h6>Temporizador</h6>
+              <span id="estado-timer" class="status-badge badge-timer-inactivo">INACTIVO</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card status-card">
+            <div class="card-body text-center">
+              <i class="fas fa-info fa-2x text-warning"></i>
+              <h6>Contenido Actual</h6>
+              <div id="contenido-actual" class="contenido-info fade-transition">
+                <div id="url-actual">
+                  <strong>🌐 URL Activa:</strong>
+                  <small class="url-display">https://ictuesantacruz.cl</small>
+                </div>
+                <div id="mensaje-actual" style="display: none;">
+                  <strong>💬 Mensaje:</strong>
+                  <small class="mensaje-display"></small>
+                </div>
+                <div id="tiempo-restante" style="display: none;">
+                  <!-- El contenido se actualiza dinámicamente con JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas adicionales del temporizador -->
+      <div class="row g-3 mt-3" id="timer-stats" style="display: none;">
+        <div class="col-md-12">
+          <div class="card status-card">
+            <div class="card-body">
+              <h6 class="card-title">
+                <i class="fas fa-chart-line me-2"></i>
+                Estadísticas del Temporizador
+              </h6>
+              <div class="row text-center">
+                <div class="col-3">
+                  <div class="stat-item">
+                    <i class="fas fa-hourglass-start text-info"></i>
+                    <div class="stat-value" id="stat-tiempo-inicial">0:00</div>
+                    <div class="stat-label">Tiempo Inicial</div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="stat-item">
+                    <i class="fas fa-clock text-warning"></i>
+                    <div class="stat-value" id="stat-tiempo-transcurrido">0:00</div>
+                    <div class="stat-label">Transcurrido</div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="stat-item">
+                    <i class="fas fa-hourglass-end text-success"></i>
+                    <div class="stat-value" id="stat-tiempo-restante">0:00</div>
+                    <div class="stat-label">Restante</div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="stat-item">
+                    <i class="fas fa-percentage text-primary"></i>
+                    <div class="stat-value" id="stat-porcentaje">0%</div>
+                    <div class="stat-label">Completado</div>
+                  </div>
+                </div>
+              </div>
+              <div class="progress mt-3" style="height: 10px;">
+                <div class="progress-bar bg-gradient" id="progress-global" 
+                     role="progressbar" style="width: 0%" 
+                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ayuda de atajos de teclado -->
+    <div class="alert alert-dark">
+      <h6>
+        <i class="fas fa-keyboard me-2"></i>
+        Atajos de Teclado
+      </h6>
+      <div class="row">
+        <div class="col-md-6">
+          <small>
+            <strong>Ctrl+1:</strong> Mostrar Contenido<br>
+            <strong>Ctrl+2:</strong> Mostrar Timer<br>
+            <strong>Ctrl+3:</strong> Mostrar Mensaje
+          </small>
+        </div>
+        <div class="col-md-6">
+          <small>
+            <strong>Espacio:</strong> Iniciar Timer<br>
+            <strong>Shift+R:</strong> Reiniciar Timer<br>
+            <strong>U:</strong> Actualizar Tiempo
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <img src="../assets/logo.svg" alt="Logo" width="120" class="mb-3">
+    <p class="text-light mb-0">
+      © Creado por <strong>kombi.cl</strong> - 2025
+    </p>
+       <p class="text-light mb-0">
+      Monitor de Escenario v2.2 - Panel de Control con Editor Avanzado
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/panel.js"></script>
+  
+  <script>
+    // Configuración de TinyMCE
+    let editorInstance = null;
+
+    tinymce.init({
+      selector: '#mensaje',
+      height: 250,
+      menubar: 'edit view insert format tools table help',
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons',
+        'template', 'codesample', 'quickbars', 'pagebreak', 'nonbreaking'
+      ],
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | ' +
+               'forecolor backcolor | alignleft aligncenter alignright alignjustify | ' +
+               'bullist numlist outdent indent | link image media table | ' +
+               'emoticons template codesample | removeformat code fullscreen | help',
+      quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+      quickbars_insert_toolbar: 'quickimage quicktable',
+      contextmenu: 'link image table',
+      font_family_formats: 'Arial=arial,helvetica,sans-serif; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Tahoma=tahoma,arial,helvetica,sans-serif; Times New Roman=times new roman,times; Verdana=verdana,geneva; Courier New=courier new,courier,monospace',
+      font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 18pt 24pt 30pt 36pt 48pt 60pt 72pt 96pt',
+      block_formats: 'Párrafo=p; Título 1=h1; Título 2=h2; Título 3=h3; Título 4=h4; Título 5=h5; Título 6=h6; Preformateado=pre',
+      content_style: `
+        body { 
+          font-family: 'Segoe UI', Arial, sans-serif; 
+          font-size: 16px; 
+          color: #ffffff !important;
+          background-color: #2c2c2c !important;
+          line-height: 1.5;
+          margin: 10px;
+        }
+        h1 { 
+          font-size: 2.5em; 
+          margin: 0.5em 0; 
+          color: #ffc107 !important;
+          text-align: center;
+        }
+        h2 { 
+          font-size: 2em; 
+          margin: 0.5em 0; 
+          color: #17a2b8 !important;
+          text-align: center;
+        }
+        h3 { 
+          font-size: 1.5em; 
+          margin: 0.5em 0; 
+          color: #28a745 !important;
+        }
+        p { 
+          margin: 0.5em 0; 
+          text-align: center;
+          color: #ffffff !important;
+        }
+        strong {
+          color: #ffc107 !important;
+        }
+        em {
+          color: #17a2b8 !important;
+        }
+        .urgent {
+          background: #dc3545 !important;
+          border: 2px solid #c82333 !important;
+          padding: 15px;
+          border-radius: 8px;
+          color: #ffffff !important;
+          font-weight: bold;
+        }
+        .highlight {
+          background: #ffc107 !important;
+          border: 2px solid #e0a800 !important;
+          padding: 15px;
+          border-radius: 8px;
+          color: #000000 !important;
+        }
+        .success {
+          background: #28a745 !important;
+          border: 2px solid #1e7e34 !important;
+          padding: 15px;
+          border-radius: 8px;
+          color: #ffffff !important;
+        }
+        .info {
+          background: #17a2b8 !important;
+          border: 2px solid #138496 !important;
+          padding: 15px;
+          border-radius: 8px;
+          color: #ffffff !important;
+        }
+        .prayer {
+          background: #6f42c1 !important;
+          border: 2px solid #5a32a3 !important;
+          padding: 15px;
+          border-radius: 8px;
+          color: #ffffff !important;
+        }
+        ul, ol {
+          color: #ffffff !important;
+        }
+        li {
+          color: #ffffff !important;
+          margin: 0.3em 0;
+        }
+      `,
+      skin: 'oxide-dark',
+      content_css: 'dark',
+      language: 'es',
+      branding: false,
+      promotion: false,
+      templates: [
+        {
+          title: 'Título Centrado',
+          description: 'Título grande centrado con subtítulo',
+          content: '<h1 style="text-align: center; color: #ffc107;">TÍTULO PRINCIPAL</h1><p style="text-align: center; font-size: 1.2em;">Subtítulo descriptivo</p>'
+        },
+        {
+          title: 'Avisos Generales',
+          description: 'Para anuncios importantes',
+          content: '<div class="highlight"><h2 style="text-align: center;">📢 AVISOS</h2><ul><li>Información importante</li><li>Eventos próximos</li><li>Recordatorios</li></ul></div>'
+        },
+        {
+          title: 'Cumpleaños',
+          description: 'Celebración de cumpleañeros',
+          content: '<div class="success"><h2 style="text-align: center;">🎂 CUMPLEAÑOS</h2><p style="text-align: center;">Celebramos a quienes cumplen años</p><p><strong>¡Felicidades!</strong></p></div>'
+        },
+        {
+          title: 'Nuevos Miembros',
+          description: 'Bienvenida a nuevos integrantes',
+          content: '<div class="info"><h2 style="text-align: center;">👥 NUEVOS MIEMBROS</h2><p style="text-align: center;">Damos la bienvenida a nuestros nuevos integrantes</p><p><strong>¡Bienvenidos!</strong></p></div>'
+        },
+        {
+          title: 'Mensaje Urgente',
+          description: 'Para emergencias o información crítica',
+          content: '<div class="urgent"><h1 style="text-align: center;">🚨 URGENTE</h1><p style="text-align: center; font-size: 1.5em;"><strong>ATENCIÓN INMEDIATA</strong></p><p style="text-align: center;">Información crítica</p></div>'
+        },
+        {
+          title: 'Anuncio Importante',
+          description: 'Para comunicados destacados',
+          content: '<div class="highlight"><h1 style="text-align: center;">📢 ANUNCIO</h1><p style="text-align: center; font-size: 1.3em;"><strong>INFORMACIÓN IMPORTANTE</strong></p><p style="text-align: center;">Detalles del anuncio</p></div>'
+        },
+        {
+          title: 'Lista de Actividades',
+          description: 'Lista ordenada de eventos o actividades',
+          content: '<h3 style="text-align: center;">📋 Programa del Día</h3><ol><li>Primera actividad - 9:00 AM</li><li>Segunda actividad - 11:00 AM</li><li>Almuerzo - 12:30 PM</li><li>Actividad final - 2:00 PM</li></ol>'
+        },
+        {
+          title: 'Pausa',
+          description: 'Mensaje para pausas o descansos',
+          content: '<div style="text-align: center; padding: 30px;"><h2 style="color: #ff9800;">☕ PAUSA</h2><p style="font-size: 1.3em;">Regresamos en <strong>15 minutos</strong></p><p><em>Gracias por su paciencia</em></p></div>'
+        }
+      ],
+      setup: function (editor) {
+        editorInstance = editor;
+        
+        // Configurar límite de caracteres mejorado
+        editor.on('init', function () {
+          updateCharCount();
+        });
+        
+        editor.on('keyup paste input', function () {
+          const content = editor.getContent({format: 'text'});
+          if (content.length > 800) {
+            // Mostrar advertencia pero no truncar automáticamente
+            const helpText = document.getElementById('mensajeHelp');
+            helpText.textContent = `¡Límite excedido! ${800 - content.length} caracteres`;
+            helpText.className = 'form-text text-danger';
+          }
+          updateCharCount();
+        });
+        
+        // Agregar botón personalizado para limpiar
+        editor.ui.registry.addButton('clearall', {
+          text: 'Limpiar',
+          icon: 'remove',
+          tooltip: 'Limpiar todo el contenido',
+          onAction: function () {
+            editor.setContent('');
+            updateCharCount();
+          }
+        });
+        
+        // Agregar botón para enviar mensaje
+        editor.ui.registry.addButton('sendmessage', {
+          text: 'Enviar',
+          icon: 'arrow-right',
+          tooltip: 'Enviar mensaje al escenario',
+          onAction: function () {
+            mostrar('mensaje');
+          }
+        });
+      },
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | ' +
+               'forecolor backcolor | alignleft aligncenter alignright alignjustify | ' +
+               'bullist numlist outdent indent | link image media table emoticons | ' +
+               'template codesample | clearall sendmessage | removeformat code fullscreen | help',
+      init_instance_callback: function (editor) {
+        // Configurar contenido inicial
+        editor.setContent('<h1 style="text-align: center; color: #ffc107;">¡Bienvenidos!</h1><p style="text-align: center;">Al evento de hoy</p>');
+        updateCharCount();
+      }
+    });
+
+    function updateCharCount() {
+      if (editorInstance) {
+        const content = editorInstance.getContent({format: 'text'});
+        const remaining = 800 - content.length;
+        const helpText = document.getElementById('mensajeHelp');
+        
+        helpText.textContent = `${remaining} caracteres restantes`;
+        
+        if (remaining < 50) {
+          helpText.className = 'form-text text-warning';
+        } else if (remaining < 0) {
+          helpText.className = 'form-text text-danger';
+        } else {
+          helpText.className = 'form-text text-muted';
+        }
+      }
+    }
+
+    // Funciones para los mensajes rápidos simplificadas
+    function insertarMensajeRapido(tipo) {
+      let contenido = '';
+      
+      switch(tipo) {
+        case 'bienvenida':
+          contenido = '<h1 style="text-align: center; color: #ffc107;">¡Bienvenidos!</h1><p style="text-align: center; font-size: 1.3em;">Al evento de hoy</p>';
+          break;
+        case 'pausa':
+          contenido = '<div style="text-align: center; padding: 20px;"><h2 style="color: #17a2b8;">⏰ PAUSA</h2><p><strong>Regresamos en 15 minutos</strong></p><p><em>Tiempo para descansar</em></p></div>';
+          break;
+        case 'despedida':
+          contenido = '<div class="success"><h1 style="text-align: center; color: #28a745;">¡Gracias por participar!</h1><p style="text-align: center;">Hasta la próxima</p><p style="text-align: center;"><strong>¡Que tengan un excelente día!</strong></p></div>';
+          break;
+        case 'urgente':
+          contenido = '<div class="urgent"><h1 style="text-align: center;">🚨 URGENTE</h1><p style="text-align: center; font-size: 1.5em;"><strong>ATENCIÓN INMEDIATA REQUERIDA</strong></p><p style="text-align: center;">Información crítica</p></div>';
+          break;
+        case 'anuncio':
+          contenido = '<div class="highlight"><h1 style="text-align: center;">📢 ANUNCIO IMPORTANTE</h1><p style="text-align: center; font-size: 1.3em;"><strong>INFORMACIÓN RELEVANTE</strong></p><p style="text-align: center;">Detalles del anuncio aquí</p></div>';
+          break;
+      }
+      
+      if (editorInstance && contenido) {
+        editorInstance.setContent(contenido);
+        updateCharCount();
+      }
+    }
+
+    function setTiempoRapido(horas, minutos, segundos) {
+      document.getElementById('horas').value = horas;
+      document.getElementById('minutos').value = minutos;
+      document.getElementById('segundos').value = segundos;
+      actualizarTiempo();
+    }
+
+    function setMensajeRapido(mensaje) {
+      if (editorInstance) {
+        editorInstance.setContent(mensaje);
+        updateCharCount();
+      }
+    }
+
+    function limpiarMensaje() {
+      if (editorInstance) {
+        editorInstance.setContent('');
+        updateCharCount();
+      }
+    }
+
+    function aplicarPlantilla(tipo) {
+      let plantilla = '';
+      
+      switch(tipo) {
+        case 'titulo':
+          plantilla = '<h1 style="text-align: center; color: #ffc107;">TÍTULO PRINCIPAL</h1><p style="text-align: center; font-size: 1.2em;">Subtítulo o descripción</p>';
+          break;
+        case 'anuncio':
+          plantilla = '<div style="border: 3px solid #dc3545; padding: 20px; background-color: #f8f9fa;"><h2 style="color: #dc3545; text-align: center;">📢 ANUNCIO IMPORTANTE</h2><p style="text-align: center;">Escribe tu mensaje aquí</p></div>';
+          break;
+        case 'lista':
+          plantilla = '<h3>📋 Lista de puntos:</h3><ul><li>Primer punto</li><li>Segundo punto</li><li>Tercer punto</li></ul>';
+          break;
+        case 'centrado':
+          plantilla = '<div style="text-align: center; padding: 30px;"><h2 style="color: #28a745;">🎯 Mensaje Centrado</h2><p style="font-size: 1.3em;">Tu contenido va aquí</p></div>';
+          break;
+      }
+      
+      if (editorInstance && plantilla) {
+        editorInstance.setContent(plantilla);
+        updateCharCount();
+      }
+    }
+
+    // Función personalizada para obtener el contenido del editor
+    function obtenerMensajeEditor() {
+      if (editorInstance) {
+        return editorInstance.getContent();
+      }
+      return '';
+    }
+
+    // Sobrescribir la función mostrar para usar TinyMCE
+    function mostrar(tipo) {
+      if (tipo === 'mensaje') {
+        const mensajeHTML = obtenerMensajeEditor();
+        if (!mensajeHTML.trim()) {
+          if (panelControl) {
+            panelControl.mostrarNotificacion('El mensaje no puede estar vacío', 'error');
+          }
+          return;
+        }
+        
+        // Usar el panel control pero con el contenido HTML
+        if (panelControl) {
+          panelControl.mostrarMensajeHTML(mensajeHTML);
+        }
+      } else {
+        // Para otros tipos, usar la función normal
+        if (panelControl) {
+          panelControl.mostrar(tipo);
+        }
+      }
+    }
+
+    // Resto de funciones existentes...
+    function enviarComando(comando) {
+      switch(comando) {
+        case 'start':
+          panelControl?.iniciarTimer();
+          break;
+        case 'pause':
+          panelControl?.pausarTimer();
+          break;
+        case 'reset':
+          panelControl?.reiniciarTimer();
+          break;
+      }
+    }
+
+    function actualizarTiempo() {
+      panelControl?.actualizarTiempo();
+    }
+
+    function abrirPantalla() {
+      panelControl?.abrirPantalla();
+    }
+
+    // Funciones de estadísticas y tiempo
+    function actualizarEstadisticas(datos) {
+      const {
+        tiempoInicial = 0,
+        tiempoTranscurrido = 0,
+        tiempoRestante = 0,
+        porcentaje = 0
+      } = datos;
+
+      document.getElementById('stat-tiempo-inicial').textContent = formatearTiempoLocal(tiempoInicial);
+      document.getElementById('stat-tiempo-transcurrido').textContent = formatearTiempoLocal(tiempoTranscurrido);
+      document.getElementById('stat-tiempo-restante').textContent = formatearTiempoLocal(tiempoRestante);
+      document.getElementById('stat-porcentaje').textContent = porcentaje + '%';
+
+      const progressBar = document.getElementById('progress-global');
+      progressBar.style.width = porcentaje + '%';
+      progressBar.setAttribute('aria-valuenow', porcentaje);
+
+      progressBar.className = 'progress-bar bg-gradient ';
+      if (porcentaje >= 90) {
+        progressBar.classList.add('bg-danger');
+      } else if (porcentaje >= 75) {
+        progressBar.classList.add('bg-warning');
+      } else if (porcentaje >= 50) {
+        progressBar.classList.add('bg-info');
+      } else {
+        progressBar.classList.add('bg-success');
+      }
+
+      const statsPanel = document.getElementById('timer-stats');
+      if (statsPanel) {
+        statsPanel.style.display = tiempoInicial > 0 ? 'block' : 'none';
+      }
+    }
+
+    function formatearTiempoLocal(segundos) {
+      if (segundos < 0) segundos = 0;
+      
+      const horas = Math.floor(segundos / 3600);
+      const minutos = Math.floor((segundos % 3600) / 60);
+      const segs = segundos % 60;
+      
+      if (horas > 0) {
+        return `${horas}:${minutos.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
+      } else {
+        return `${minutos}:${segs.toString().padStart(2, '0')}`;
+      }
+    }
+
+    function actualizarTiempoFinalizacion() {
+      if (panelControl && panelControl.estadoTimer === 'activo') {
+        const tiempoFin = panelControl.calcularTiempoEstimadoFinalizacion();
+        document.getElementById('tiempo-finalizacion').textContent = tiempoFin || '--:--:--';
+        document.getElementById('estado-detallado').textContent = 'En ejecución';
+        document.getElementById('timer-info-panel').style.display = 'block';
+      } else {
+        document.getElementById('tiempo-finalizacion').textContent = '--:--:--';
+        document.getElementById('estado-detallado').textContent = 'Inactivo';
+        document.getElementById('timer-info-panel').style.display = 'none';
+      }
+    }
+
+    // Event listeners para inputs de tiempo
+    ['horas', 'minutos', 'segundos'].forEach(id => {
+      const element = document.getElementById(id);
+      element.addEventListener('input', () => {
+        const horas = parseInt(document.getElementById('horas').value) || 0;
+        const minutos = parseInt(document.getElementById('minutos').value) || 0;
+        const segundos = parseInt(document.getElementById('segundos').value) || 0;
+        
+        const totalSegundos = horas * 3600 + minutos * 60 + segundos;
+        
+        if (totalSegundos > 0 && panelControl) {
+          const tiempoFormateado = formatearTiempoLocal(totalSegundos);
+          panelControl.actualizarEstadoContenido('temporizador', `Configurado: ${tiempoFormateado}`);
+          panelControl.actualizarBadgeTimer('configurado');
+          
+          actualizarEstadisticas({
+            tiempoInicial: totalSegundos,
+            tiempoTranscurrido: 0,
+            tiempoRestante: totalSegundos,
+            porcentaje: 0
+          });
+        } else if (panelControl) {
+          panelControl.actualizarEstadoContenido('temporizador', 'No configurado');
+          panelControl.actualizarBadgeTimer('inactivo');
+          actualizarEstadisticas({});
+        }
+      });
+    });
+
+    // Actualizar información cada segundo
+    setInterval(() => {
+      actualizarTiempoFinalizacion();
+      
+      if (panelControl && panelControl.estadoTimer === 'activo') {
+        actualizarEstadisticas({
+          tiempoInicial: panelControl.tiempoInicial,
+          tiempoTranscurrido: panelControl.tiempoTranscurrido,
+          tiempoRestante: Math.max(0, panelControl.tiempoInicial - panelControl.tiempoTranscurrido),
+          porcentaje: Math.round((panelControl.tiempoTranscurrido / panelControl.tiempoInicial) * 100)
+        });
+      }
+    }, 1000);
+
+    // Función para testing
+    window.simularCambioEstado = function(tipo, valor) {
+      if (panelControl) {
+        switch(tipo) {
+          case 'vista':
+            panelControl.actualizarBadgeVista(valor);
+            break;
+          case 'timer':
+            panelControl.actualizarBadgeTimer(valor);
+            break;
+          case 'contenido':
+            panelControl.actualizarEstadoContenido('contenido', valor);
+            break;
+        }
+      }
+    };
+
+    // Auto-save para URL
+    document.getElementById('url').addEventListener('input', function(e) {
+      if (panelControl) {
+        panelControl.actualizarEstadoContenido('contenido', e.target.value);
+      }
+    });
+
+    // Inicializar al cargar
+    setTimeout(() => {
+      const horas = parseInt(document.getElementById('horas').value) || 0;
+      const minutos = parseInt(document.getElementById('minutos').value) || 0;
+      const segundos = parseInt(document.getElementById('segundos').value) || 0;
+      
+      const totalSegundos = horas * 3600 + minutos * 60 + segundos;
+      
+      if (totalSegundos > 0 && panelControl) {
+        const tiempoFormateado = formatearTiempoLocal(totalSegundos);
+        panelControl.actualizarEstadoContenido('temporizador', `Configurado: ${tiempoFormateado}`);
+        panelControl.actualizarBadgeTimer('configurado');
+      }
+    }, 500);
+  </script>
+
+  <!-- Estilos adicionales para TinyMCE -->
+  <style>
+    /* Editor TinyMCE mejorado */
+    .tox-tinymce {
+      border-radius: 12px !important;
+      border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .tox .tox-editor-header {
+      background: #1a1a1a !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .tox .tox-toolbar__primary {
+      background: #2a2a2a !important;
+      border: none !important;
+      padding: 8px !important;
+    }
+
+    .tox .tox-edit-area__iframe {
+      background: #1a1a1a !important;
+    }
+
+    .tox .tox-toolbar__group {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .tox .tox-tbtn {
+      color: #ffffff !important;
+      border-radius: 4px !important;
+    }
+
+    .tox .tox-tbtn:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #ffc107 !important;
+    }
+
+    .tox .tox-tbtn--enabled {
+      background: #ffc107 !important;
+      color: #000 !important;
+    }
+
+    /* Mejorar los botones de mensajes rápidos */
+    .btn-outline-warning {
+      border-color: rgba(255, 193, 7, 0.5) !important;
+      color: #ffc107 !important;
+    }
+
+    .btn-outline-warning:hover {
+      background-color: #ffc107 !important;
+      border-color: #ffc107 !important;
+      color: #000 !important;
+    }
+
+    /* Mejorar la sección de mensajes */
+    .message-section {
+      border-left: 4px solid var(--warning-color);
+      background: rgba(255, 193, 7, 0.05);
+    }
+
+    /* Contador de caracteres más visible */
+    #mensajeHelp {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-text.text-warning {
+      color: #ffc107 !important;
+      font-weight: 700;
+    }
+
+    .form-text.text-danger {
+      color: #dc3545 !important;
+      font-weight: 700;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* Estilos para las estadísticas */
+    .stat-item {
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: #adb5bd;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .progress-bar.bg-gradient {
+      background: linear-gradient(45deg, currentColor, rgba(255,255,255,0.2)) !important;
+    }
+    
+    @keyframes blink-danger {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.5; }
+    }
+    
+    .text-danger.fw-bold {
+      animation: blink-danger 1s infinite;
+    }
+
+    /* Mejorar la apariencia general */
+    .content-section {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      backdrop-filter: blur(15px);
+    }
+
+    .timer-controls {
+      background: rgba(25, 135, 84, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    /* Botones destacados para mensajes importantes */
+    .btn-urgent-destacado {
+      min-width: 200px;
+      min-height: 60px;
+      font-size: 1.2rem;
+      border: 3px solid #dc3545 !important;
+      box-shadow: 0 0 20px rgba(220, 53, 69, 0.5) !important;
+      animation: pulse-urgent-btn 2s infinite;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-urgent-destacado:hover {
+      box-shadow: 0 0 30px rgba(220, 53, 69, 0.8) !important;
+      transform: scale(1.05);
+    }
+
+    .btn-anuncio-destacado {
+      min-width: 200px;
+      min-height: 60px;
+      font-size: 1.2rem;
+      border: 3px solid #ffc107 !important;
+      box-shadow: 0 0 20px rgba(255, 193, 7, 0.5) !important;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000 !important;
+    }
+
+    .btn-anuncio-destacado:hover {
+      box-shadow: 0 0 30px rgba(255, 193, 7, 0.8) !important;
+      transform: scale(1.05);
+      color: #000 !important;
+    }
+
+    @keyframes pulse-urgent-btn {
+      0% { 
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.5);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 30px rgba(220, 53, 69, 0.8);
+        transform: scale(1.02);
+      }
+      100% { 
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.5);
+        transform: scale(1);
+      }
+    }
+  </style>
+</body>
+</html>

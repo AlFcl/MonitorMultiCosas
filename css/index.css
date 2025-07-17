@@ -1,5 +1,5 @@
 /* ========================
-   css/index.css (Estilos del Escenario - Versión Mejorada)
+   css/index.css (Estilos del Escenario - Con tiempo transcurrido)
    ======================== */
 
 :root {
@@ -11,6 +11,7 @@
   --message-color: #ffdd57;
   --error-color: #ff6b6b;
   --progress-bg: rgba(255, 255, 255, 0.1);
+  --info-color: #17a2b8;
   --font-main: 'Segoe UI', 'Arial', sans-serif;
   --font-mono: 'Courier New', monospace;
 }
@@ -74,17 +75,51 @@ html, body {
   justify-content: center;
   text-align: center;
   position: relative;
+  padding: 2rem;
 }
 
 .timer-display {
-  font-size: clamp(8rem, 15vw, 20rem);
+  font-size: clamp(12rem, 25vw, 35rem);
   font-family: var(--font-mono);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-shadow: 0 0 30px rgba(254, 250, 224, 0.5);
   transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  line-height: 0.9;
+}
+
+/* Información adicional del timer */
+.timer-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
   margin-bottom: 2rem;
-  line-height: 1;
+  font-family: var(--font-mono);
+  opacity: 0.9;
+}
+
+.timer-info > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-info .label {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  color: var(--info-color);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.timer-info .valor {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--primary-text);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(254, 250, 224, 0.3);
 }
 
 /* Estados del temporizador */
@@ -104,7 +139,7 @@ html, body {
   color: var(--success-color);
   text-shadow: 0 0 60px rgba(0, 255, 136, 0.8);
   animation: celebration 1s ease-in-out;
-  font-size: clamp(6rem, 12vw, 16rem);
+  font-size: clamp(10rem, 20vw, 28rem);
 }
 
 /* Barra de progreso del temporizador */
@@ -113,9 +148,10 @@ html, body {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 8px;
+  height: 12px;
   background: var(--progress-bg);
   overflow: hidden;
+  border-radius: 0;
 }
 
 .timer-progress-bar {
@@ -123,6 +159,34 @@ html, body {
   background: var(--success-color);
   transition: width 1s ease, background-color 0.3s ease;
   box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  border-radius: 0;
+  position: relative;
+}
+
+.timer-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Estados especiales para la información del timer */
+.timer-info .tiempo-transcurrido .valor {
+  color: var(--info-color);
+}
+
+.timer-info .tiempo-total .valor {
+  color: var(--warning-color);
+}
+
+/* Cuando el timer está en peligro, resaltar el tiempo transcurrido */
+.timer-display.timer-danger ~ .timer-info .tiempo-transcurrido .valor {
+  color: var(--danger-color);
+  animation: pulse-danger 1s infinite;
 }
 
 /* ========================
@@ -130,17 +194,129 @@ html, body {
    ======================== */
 
 .mensaje-escenario {
-  font-size: clamp(4rem, 8vw, 12rem);
+  font-size: clamp(3rem, 6vw, 8rem);
   color: var(--message-color);
   text-align: center;
   width: 100%;
   padding: 2rem;
   font-weight: 600;
   text-shadow: 0 0 30px rgba(255, 221, 87, 0.6);
-  line-height: 1.2;
+  line-height: 1.3;
   word-wrap: break-word;
   hyphens: auto;
   animation: messageEntry 0.8s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* Estilos para elementos HTML dentro de mensajes */
+.mensaje-escenario h1 {
+  font-size: clamp(4rem, 8vw, 12rem);
+  margin: 0.5rem 0;
+  text-shadow: 0 0 40px rgba(255, 221, 87, 0.8);
+  line-height: 1.1;
+}
+
+.mensaje-escenario h2 {
+  font-size: clamp(3rem, 6vw, 9rem);
+  margin: 0.4rem 0;
+  text-shadow: 0 0 35px rgba(255, 221, 87, 0.7);
+  line-height: 1.2;
+}
+
+.mensaje-escenario h3 {
+  font-size: clamp(2.5rem, 5vw, 7rem);
+  margin: 0.3rem 0;
+  text-shadow: 0 0 30px rgba(255, 221, 87, 0.6);
+  line-height: 1.2;
+}
+
+.mensaje-escenario p {
+  font-size: clamp(2rem, 4vw, 6rem);
+  margin: 0.5rem 0;
+  line-height: 1.3;
+}
+
+.mensaje-escenario ul,
+.mensaje-escenario ol {
+  text-align: left;
+  max-width: 80%;
+  font-size: clamp(2rem, 4vw, 6rem);
+  line-height: 1.4;
+}
+
+.mensaje-escenario li {
+  margin: 0.3rem 0;
+  padding: 0.2rem 0;
+}
+
+.mensaje-escenario strong {
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.mensaje-escenario em {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* Estilos para divs con estilos inline (desde TinyMCE) */
+.mensaje-escenario div {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+/* Efectos especiales para mensajes urgentes */
+.mensaje-escenario [style*="color: #dc3545"],
+.mensaje-escenario [style*="color: rgb(220, 53, 69)"],
+.mensaje-escenario [style*="color: red"] {
+  animation: pulse-urgent 1.5s infinite;
+}
+
+@keyframes pulse-urgent {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Estilos para mensajes con bordes (anuncios) */
+.mensaje-escenario div[style*="border"] {
+  border-radius: 15px !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsivo para mensajes HTML */
+@media (max-width: 768px) {
+  .mensaje-escenario {
+    font-size: clamp(1.5rem, 4vw, 4rem);
+    padding: 1rem;
+    min-height: 50vh;
+  }
+  
+  .mensaje-escenario h1 {
+    font-size: clamp(2rem, 6vw, 6rem);
+  }
+  
+  .mensaje-escenario h2 {
+    font-size: clamp(1.8rem, 5vw, 5rem);
+  }
+  
+  .mensaje-escenario h3 {
+    font-size: clamp(1.5rem, 4vw, 4rem);
+  }
+  
+  .mensaje-escenario p {
+    font-size: clamp(1.2rem, 3vw, 3rem);
+  }
+  
+  .mensaje-escenario ul,
+  .mensaje-escenario ol {
+    font-size: clamp(1.2rem, 3vw, 3rem);
+  }
 }
 
 /* ========================
@@ -211,6 +387,12 @@ html, body {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.05); opacity: 0.8; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-danger {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 @keyframes celebration {
@@ -295,6 +477,28 @@ html, body {
   filter: drop-shadow(0 0 20px currentColor);
 }
 
+/* Animación de la barra de progreso */
+.timer-progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progressShine 3s infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
 /* ========================
    RESPONSIVE DESIGN
    ======================== */
@@ -302,7 +506,21 @@ html, body {
 /* Para pantallas pequeñas */
 @media (max-width: 768px) {
   .timer-display {
-    font-size: clamp(4rem, 12vw, 8rem);
+    font-size: clamp(8rem, 20vw, 15rem);
+  }
+  
+  .timer-info {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .timer-info .label {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+  }
+  
+  .timer-info .valor {
+    font-size: clamp(1.5rem, 3vw, 2rem);
   }
   
   .mensaje-escenario {
@@ -327,13 +545,29 @@ html, body {
     padding: 10px 20px;
     top: 10px;
   }
+  
+  .timer-progress {
+    height: 8px;
+  }
 }
 
 /* Para pantallas muy pequeñas */
 @media (max-width: 480px) {
   .timer-display {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: clamp(6rem, 18vw, 12rem);
     margin-bottom: 1rem;
+  }
+  
+  .timer-info {
+    margin-bottom: 1rem;
+  }
+  
+  .timer-info .label {
+    font-size: 0.9rem;
+  }
+  
+  .timer-info .valor {
+    font-size: 1.3rem;
   }
   
   .mensaje-escenario {
@@ -352,12 +586,20 @@ html, body {
     font-size: clamp(12rem, 18vw, 24rem);
   }
   
+  .timer-info .label {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+  }
+  
+  .timer-info .valor {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+  
   .mensaje-escenario {
     font-size: clamp(6rem, 10vw, 16rem);
   }
   
   .timer-progress {
-    height: 12px;
+    height: 16px;
   }
 }
 
@@ -380,6 +622,10 @@ html, body {
   .timer-display.timer-danger {
     animation: none;
   }
+  
+  .timer-progress-bar::before {
+    animation: none;
+  }
 }
 
 /* Alto contraste */
@@ -390,10 +636,12 @@ html, body {
     --danger-color: #ff0000;
     --success-color: #00ff00;
     --message-color: #ffff00;
+    --info-color: #00aaff;
   }
   
   .timer-display,
-  .mensaje-escenario {
+  .mensaje-escenario,
+  .timer-info .valor {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   }
 }
@@ -403,6 +651,7 @@ html, body {
   :root {
     --primary-bg: #ffffff;
     --primary-text: #2c2c2c;
+    --progress-bg: rgba(0, 0, 0, 0.1);
   }
   
   #contenedor {
@@ -410,7 +659,8 @@ html, body {
   }
   
   .timer-display,
-  .mensaje-escenario {
+  .mensaje-escenario,
+  .timer-info .valor {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   }
 }
@@ -426,7 +676,8 @@ html, body {
   }
   
   .timer-display,
-  .mensaje-escenario {
+  .mensaje-escenario,
+  .timer-info .valor {
     color: black !important;
     text-shadow: none !important;
     animation: none !important;
@@ -438,5 +689,9 @@ html, body {
   
   .alerta-temporal {
     display: none;
+  }
+  
+  .timer-info .label {
+    color: #666 !important;
   }
 }
