@@ -1,697 +1,117 @@
-/* ========================
-   css/index.css (Estilos del Escenario - Con tiempo transcurrido)
-   ======================== */
-
-:root {
-  --primary-bg: #000000;
-  --primary-text: #fefae0;
-  --warning-color: #ff8c00;
-  --danger-color: #ff4444;
-  --success-color: #00ff88;
-  --message-color: #ffdd57;
-  --error-color: #ff6b6b;
-  --progress-bg: rgba(255, 255, 255, 0.1);
-  --info-color: #17a2b8;
-  --font-main: 'Segoe UI', 'Arial', sans-serif;
-  --font-mono: 'Courier New', monospace;
-}
-
-/* Reset y base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
 
 html, body {
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--primary-bg);
-  color: var(--primary-text);
-  font-family: var(--font-main);
+  background: #000;
+  color: #fefae0;
   overflow: hidden;
-  position: relative;
 }
 
-/* Cursor personalizado en pantalla completa */
-.fullscreen-mode {
-  cursor: none;
-}
-
-.fullscreen-mode:hover {
-  cursor: none;
-}
-
-/* Contenedor principal */
 #contenedor {
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  background: radial-gradient(circle at center, #111 0%, #000 100%);
 }
 
-/* Estilos para iframe */
 #contenedor iframe {
   width: 100vw !important;
   height: 100vh !important;
   border: none;
   display: block;
-  background: var(--primary-bg);
 }
 
-/* ========================
-   TEMPORIZADOR
-   ======================== */
-
-.timer-container {
+/* Timer */
+#timer {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 18vw;
+  letter-spacing: -0.02em;
+  text-align: center;
   width: 100%;
-  height: 100%;
+  color: #fefae0;
+  transition: color 0.3s ease;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.timer-warning {
+  color: #f59e0b !important;
+}
+
+.timer-danger {
+  color: #ef4444 !important;
+  animation: blink 0.8s step-start infinite;
+}
+
+/* Tiempo negativo — sobretiempo */
+.timer-negativo {
+  color: #ff4444 !important;
+  text-shadow: 0 0 60px rgba(255, 68, 68, 0.35);
+  animation: pulso 1.8s ease-in-out infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes pulso {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* Pantalla de inicio */
+#pantalla-inicio {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  position: relative;
-  padding: 2rem;
-}
-
-.timer-display {
-  font-size: clamp(12rem, 25vw, 35rem);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 30px rgba(254, 250, 224, 0.5);
-  transition: all 0.3s ease;
-  margin-bottom: 1.5rem;
-  line-height: 0.9;
-}
-
-/* Información adicional del timer */
-.timer-info {
-  display: flex;
-  justify-content: space-between;
+  gap: 2.5vw;
   width: 100%;
-  max-width: 1000px;
-  margin-bottom: 2rem;
-  font-family: var(--font-mono);
+  height: 100%;
+}
+
+.inicio-logo {
+  width: clamp(120px, 18vw, 280px);
   opacity: 0.9;
+  filter: brightness(1.1);
 }
 
-.timer-info > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.timer-info .label {
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
-  color: var(--info-color);
+.inicio-subtitulo {
+  font-size: clamp(1rem, 2.2vw, 2rem);
+  color: #555;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.inicio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f97316;
+  animation: dot-pulso 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulso {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.6); }
+}
+
+/* Mensaje */
+#mensaje {
+  font-family: system-ui, sans-serif;
+  font-size: 7vw;
   font-weight: 600;
-}
-
-.timer-info .valor {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  color: var(--primary-text);
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(254, 250, 224, 0.3);
-}
-
-/* Estados del temporizador */
-.timer-display.timer-warning {
-  color: var(--warning-color);
-  text-shadow: 0 0 40px rgba(255, 140, 0, 0.6);
-  animation: pulse-warning 2s infinite;
-}
-
-.timer-display.timer-danger {
-  color: var(--danger-color);
-  text-shadow: 0 0 50px rgba(255, 68, 68, 0.8);
-  animation: blink-danger 0.8s infinite;
-}
-
-.timer-display.timer-finished {
-  color: var(--success-color);
-  text-shadow: 0 0 60px rgba(0, 255, 136, 0.8);
-  animation: celebration 1s ease-in-out;
-  font-size: clamp(10rem, 20vw, 28rem);
-}
-
-/* Barra de progreso del temporizador */
-.timer-progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 12px;
-  background: var(--progress-bg);
-  overflow: hidden;
-  border-radius: 0;
-}
-
-.timer-progress-bar {
-  height: 100%;
-  background: var(--success-color);
-  transition: width 1s ease, background-color 0.3s ease;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-  border-radius: 0;
-  position: relative;
-}
-
-.timer-progress-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-}
-
-/* Estados especiales para la información del timer */
-.timer-info .tiempo-transcurrido .valor {
-  color: var(--info-color);
-}
-
-.timer-info .tiempo-total .valor {
-  color: var(--warning-color);
-}
-
-/* Cuando el timer está en peligro, resaltar el tiempo transcurrido */
-.timer-display.timer-danger ~ .timer-info .tiempo-transcurrido .valor {
-  color: var(--danger-color);
-  animation: pulse-danger 1s infinite;
-}
-
-/* ========================
-   MENSAJES
-   ======================== */
-
-.mensaje-escenario {
-  font-size: clamp(3rem, 6vw, 8rem);
-  color: var(--message-color);
+  color: #ffdd57;
   text-align: center;
   width: 100%;
-  padding: 2rem;
-  font-weight: 600;
-  text-shadow: 0 0 30px rgba(255, 221, 87, 0.6);
-  line-height: 1.3;
-  word-wrap: break-word;
-  hyphens: auto;
-  animation: messageEntry 0.8s ease-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
-}
-
-/* Estilos para elementos HTML dentro de mensajes */
-.mensaje-escenario h1 {
-  font-size: clamp(4rem, 8vw, 12rem);
-  margin: 0.5rem 0;
-  text-shadow: 0 0 40px rgba(255, 221, 87, 0.8);
-  line-height: 1.1;
-}
-
-.mensaje-escenario h2 {
-  font-size: clamp(3rem, 6vw, 9rem);
-  margin: 0.4rem 0;
-  text-shadow: 0 0 35px rgba(255, 221, 87, 0.7);
-  line-height: 1.2;
-}
-
-.mensaje-escenario h3 {
-  font-size: clamp(2.5rem, 5vw, 7rem);
-  margin: 0.3rem 0;
-  text-shadow: 0 0 30px rgba(255, 221, 87, 0.6);
-  line-height: 1.2;
-}
-
-.mensaje-escenario p {
-  font-size: clamp(2rem, 4vw, 6rem);
-  margin: 0.5rem 0;
-  line-height: 1.3;
-}
-
-.mensaje-escenario ul,
-.mensaje-escenario ol {
-  text-align: left;
-  max-width: 80%;
-  font-size: clamp(2rem, 4vw, 6rem);
-  line-height: 1.4;
-}
-
-.mensaje-escenario li {
-  margin: 0.3rem 0;
-  padding: 0.2rem 0;
-}
-
-.mensaje-escenario strong {
-  font-weight: 700;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-}
-
-.mensaje-escenario em {
-  font-style: italic;
-  opacity: 0.9;
-}
-
-/* Estilos para divs con estilos inline (desde TinyMCE) */
-.mensaje-escenario div {
-  width: 100%;
-  margin: 0.5rem 0;
-}
-
-/* Efectos especiales para mensajes urgentes */
-.mensaje-escenario [style*="color: #dc3545"],
-.mensaje-escenario [style*="color: rgb(220, 53, 69)"],
-.mensaje-escenario [style*="color: red"] {
-  animation: pulse-urgent 1.5s infinite;
-}
-
-@keyframes pulse-urgent {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Estilos para mensajes con bordes (anuncios) */
-.mensaje-escenario div[style*="border"] {
-  border-radius: 15px !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsivo para mensajes HTML */
-@media (max-width: 768px) {
-  .mensaje-escenario {
-    font-size: clamp(1.5rem, 4vw, 4rem);
-    padding: 1rem;
-    min-height: 50vh;
-  }
-  
-  .mensaje-escenario h1 {
-    font-size: clamp(2rem, 6vw, 6rem);
-  }
-  
-  .mensaje-escenario h2 {
-    font-size: clamp(1.8rem, 5vw, 5rem);
-  }
-  
-  .mensaje-escenario h3 {
-    font-size: clamp(1.5rem, 4vw, 4rem);
-  }
-  
-  .mensaje-escenario p {
-    font-size: clamp(1.2rem, 3vw, 3rem);
-  }
-  
-  .mensaje-escenario ul,
-  .mensaje-escenario ol {
-    font-size: clamp(1.2rem, 3vw, 3rem);
-  }
-}
-
-/* ========================
-   MENSAJES DE ERROR
-   ======================== */
-
-.error-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--error-color);
-  text-align: center;
-  padding: 2rem;
-  animation: errorShake 0.6s ease-in-out;
-}
-
-.error-message i {
-  font-size: 5rem;
-  margin-bottom: 1rem;
-  animation: pulse 2s infinite;
-}
-
-.error-message h2 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.error-message p {
-  font-size: 1.5rem;
-  opacity: 0.8;
-  max-width: 80%;
-}
-
-/* ========================
-   ALERTAS TEMPORALES
-   ======================== */
-
-.alerta-temporal {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 193, 7, 0.95);
-  color: #000;
-  padding: 15px 30px;
-  border-radius: 10px;
-  font-size: 1.8rem;
-  font-weight: 700;
-  z-index: 9999;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 193, 7, 0.8);
-  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
-  animation: alertSlideIn 0.5s ease-out;
-}
-
-/* ========================
-   ANIMACIONES
-   ======================== */
-
-@keyframes blink-danger {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
-}
-
-@keyframes pulse-warning {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes pulse-danger {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-@keyframes celebration {
-  0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.1) rotate(-5deg); }
-  50% { transform: scale(1.2) rotate(5deg); }
-  75% { transform: scale(1.1) rotate(-2deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
-@keyframes messageEntry {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(50px);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.05) translateY(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes alertSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-}
-
-/* ========================
-   EFECTOS ESPECIALES
-   ======================== */
-
-/* Efecto de partículas para celebración */
-.timer-display.timer-finished::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, transparent 20%, rgba(0, 255, 136, 0.1) 21%, rgba(0, 255, 136, 0.1) 40%, transparent 41%);
-  transform: translate(-50%, -50%) rotate(0deg);
-  animation: rotate 4s linear infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes rotate {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Efecto de glow para elementos importantes */
-.glow-effect {
-  filter: drop-shadow(0 0 20px currentColor);
-}
-
-/* Animación de la barra de progreso */
-.timer-progress-bar {
-  position: relative;
-  overflow: hidden;
-}
-
-.timer-progress-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: progressShine 3s infinite;
-}
-
-@keyframes progressShine {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-/* ========================
-   RESPONSIVE DESIGN
-   ======================== */
-
-/* Para pantallas pequeñas */
-@media (max-width: 768px) {
-  .timer-display {
-    font-size: clamp(8rem, 20vw, 15rem);
-  }
-  
-  .timer-info {
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .timer-info .label {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-  }
-  
-  .timer-info .valor {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-  }
-  
-  .mensaje-escenario {
-    font-size: clamp(2rem, 6vw, 6rem);
-    padding: 1rem;
-  }
-  
-  .error-message i {
-    font-size: 3rem;
-  }
-  
-  .error-message h2 {
-    font-size: 2rem;
-  }
-  
-  .error-message p {
-    font-size: 1.2rem;
-  }
-  
-  .alerta-temporal {
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    top: 10px;
-  }
-  
-  .timer-progress {
-    height: 8px;
-  }
-}
-
-/* Para pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .timer-display {
-    font-size: clamp(6rem, 18vw, 12rem);
-    margin-bottom: 1rem;
-  }
-  
-  .timer-info {
-    margin-bottom: 1rem;
-  }
-  
-  .timer-info .label {
-    font-size: 0.9rem;
-  }
-  
-  .timer-info .valor {
-    font-size: 1.3rem;
-  }
-  
-  .mensaje-escenario {
-    font-size: clamp(1.5rem, 5vw, 4rem);
-    padding: 0.5rem;
-  }
-  
-  .timer-progress {
-    height: 6px;
-  }
-}
-
-/* Para pantallas ultra anchas */
-@media (min-width: 1920px) {
-  .timer-display {
-    font-size: clamp(12rem, 18vw, 24rem);
-  }
-  
-  .timer-info .label {
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
-  }
-  
-  .timer-info .valor {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-  }
-  
-  .mensaje-escenario {
-    font-size: clamp(6rem, 10vw, 16rem);
-  }
-  
-  .timer-progress {
-    height: 16px;
-  }
-}
-
-/* ========================
-   PREFERENCIAS DE ACCESIBILIDAD
-   ======================== */
-
-/* Reducir animaciones si el usuario lo prefiere */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .timer-display.timer-warning {
-    animation: none;
-  }
-  
-  .timer-display.timer-danger {
-    animation: none;
-  }
-  
-  .timer-progress-bar::before {
-    animation: none;
-  }
-}
-
-/* Alto contraste */
-@media (prefers-contrast: high) {
-  :root {
-    --primary-text: #ffffff;
-    --warning-color: #ffaa00;
-    --danger-color: #ff0000;
-    --success-color: #00ff00;
-    --message-color: #ffff00;
-    --info-color: #00aaff;
-  }
-  
-  .timer-display,
-  .mensaje-escenario,
-  .timer-info .valor {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  }
-}
-
-/* Modo oscuro/claro automático */
-@media (prefers-color-scheme: light) {
-  :root {
-    --primary-bg: #ffffff;
-    --primary-text: #2c2c2c;
-    --progress-bg: rgba(0, 0, 0, 0.1);
-  }
-  
-  #contenedor {
-    background: radial-gradient(circle at center, #f0f0f0 0%, #ffffff 100%);
-  }
-  
-  .timer-display,
-  .mensaje-escenario,
-  .timer-info .valor {
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* ========================
-   ESTADOS DE IMPRESIÓN
-   ======================== */
-
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  .timer-display,
-  .mensaje-escenario,
-  .timer-info .valor {
-    color: black !important;
-    text-shadow: none !important;
-    animation: none !important;
-  }
-  
-  .timer-progress {
-    display: none;
-  }
-  
-  .alerta-temporal {
-    display: none;
-  }
-  
-  .timer-info .label {
-    color: #666 !important;
-  }
+  padding: 4vw;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }

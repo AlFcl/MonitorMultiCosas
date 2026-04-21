@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:,">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" onload="this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"></noscript>
+  <link rel="stylesheet" href="css/panel.css">
+</head>
+<body>
+
+  <div class="panel-layout">
+
+    <header class="panel-header">
+      <div class="panel-title">
+        <i class="fas fa-sliders-h"></i>
+        <span>Monitor <em>alf.cl</em></span>
+      </div>
+      <button class="btn-escenario" onclick="abrirPantalla()">
+        <i class="fas fa-external-link-alt"></i> Abrir escenario
+      </button>
+    </header>
+
+    <main class="panel-main">
+
+      <!-- Temporizador -->
+      <div class="p-card">
+        <div class="p-card-label">
+          <i class="fas fa-hourglass-half"></i> Temporizador
+        </div>
+        <div class="p-card-body">
+
+          <div class="timer-inputs">
+            <div class="timer-field">
+              <input type="number" id="horas" class="p-input" placeholder="00" min="0">
+              <span class="timer-unit">h</span>
+            </div>
+            <span class="timer-sep">:</span>
+            <div class="timer-field">
+              <input type="number" id="minutos" class="p-input" placeholder="00" min="0" max="59">
+              <span class="timer-unit">m</span>
+            </div>
+            <span class="timer-sep">:</span>
+            <div class="timer-field">
+              <input type="number" id="segundos" class="p-input" placeholder="00" min="0" max="59">
+              <span class="timer-unit">s</span>
+            </div>
+            <button class="p-btn p-btn-ghost icon-btn" onclick="actualizarTiempo()" title="Cargar tiempo en escenario">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <div class="timer-controls">
+            <button class="p-btn p-btn-success" onclick="iniciarTimer()">
+              <i class="fas fa-play"></i> Iniciar
+            </button>
+            <button class="p-btn p-btn-warning" onclick="enviarComando('pause')">
+              <i class="fas fa-pause"></i> Pausar
+            </button>
+            <button class="p-btn p-btn-danger" onclick="enviarComando('reset')">
+              <i class="fas fa-undo"></i> Reiniciar
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="p-card">
+        <div class="p-card-label">
+          <i class="fas fa-bullhorn"></i> Mensaje al escenario
+        </div>
+        <div class="p-card-body">
+          <input type="text" id="mensaje" class="p-input" placeholder="Escribe un mensaje...">
+          <button class="p-btn p-btn-primary full" onclick="mostrar('mensaje')">
+            <i class="fas fa-paper-plane"></i> Enviar al escenario
+          </button>
+        </div>
+      </div>
+
+      <!-- Pantalla de inicio -->
+      <div class="p-card">
+        <div class="p-card-label">
+          <i class="fas fa-power-off"></i> Pantalla
+        </div>
+        <div class="p-card-body">
+          <button class="p-btn p-btn-ghost full" onclick="mostrar('inicio')">
+            <i class="fas fa-home"></i> Volver a pantalla de inicio
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="panel-footer">
+      <img src="assets/logo.svg" alt="alf.cl" width="60">
+      <span>© 2025 <a href="https://alf.cl" target="_blank" rel="noopener">alf.cl</a></span>
+      <span class="footer-sep">·</span>
+      <a href="https://github.com/AlFcl/MonitorMultiCosas" target="_blank" rel="noopener" title="Código fuente">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+    </footer>
+
+  </div>
+
+  <script src="js/panel.js"></script>
+</body>
+</html>
